@@ -149,5 +149,11 @@ LOGGING = {
             "rotation": "1 day",
         },
     },
-    "loggers": {"dj_loguru": {"sinks": ["console", "file"], "level": "DEBUG"}},
+    "loggers": {
+        "dj_loguru": {
+            "sinks": ["console", "file"],
+            "level": "DEBUG",
+            "propagate": True,
+        },
+    },
 }
