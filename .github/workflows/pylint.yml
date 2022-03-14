@@ -20,4 +20,4 @@ jobs:
         pip install pylint django loguru
     - name: Analysing the code with pylint
       run: |
-        pylint $(git ls-files '*.py')
+        pylint dj_loguru --exit-zero
