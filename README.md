@@ -13,7 +13,7 @@ pip install dj_loguru
 - [x] Replace logging handler with loguru sink
 - [x] Configure loguru like logging in Django
 - [x] Add support for logging propagate
-- [ ] Add support for levels
+- [x] Add support for levels
 - [ ] Add support for filters
 - [ ] Add info about django into extra
 - [ ] Add built-in formats  
