@@ -1,10 +1,11 @@
 import logging
 import sys
-from copy import deepcopy
 from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
 from functools import partial
 from loguru import logger as loguru_logger
+from .loggers import DjangoLoguruLogger
+from .handlers import DjangoLoguruHandler
 
 BASE_LOGURU_LOGGING = {
     "formats": {"default": "<level>{message}</level>"},
@@ -41,7 +42,9 @@ def filter_by_logger_name(record, logger_name, propagate=False):
     splited_extra_logger_name = record["extra"]["logger_name"].split(".")
     splited_logger_name = logger_name.split(".")
 
-    if propagate and len(splited_logger_name) <= len(splited_extra_logger_name):
+    if propagate and len(splited_logger_name) <= len(
+        splited_extra_logger_name
+    ):
         return all(
             (
                 item == splited_extra_logger_name[idx]
@@ -65,6 +68,10 @@ def merge_dict(a: dict, b: dict):
 
 
 def configure_logging(config):
+    logging.setLoggerClass(DjangoLoguruLogger)
+    logging.basicConfig(
+        handlers=[DjangoLoguruHandler()], level=logging.NOTSET, force=True
+    )
     config = merge_dict(BASE_LOGURU_LOGGING, config)
     formats = config.get("formats", {})
 
@@ -72,9 +79,10 @@ def configure_logging(config):
         try:
             loguru_logger.level(level.upper())
         except ValueError:
-            setting["no"] = setting.pop("priority", 0)
             loguru_logger.level(level.upper(), **setting)
-            logging.addLevelName(setting["no"], level.upper())
+            logging.addLevelName(
+                setting.get("no", logging.NOTSET), level.upper()
+            )
 
     for logger_name, logger_setting in config.get("loggers", {}).items():
         if not logger_setting.get("sinks", []):
@@ -93,9 +101,13 @@ def configure_logging(config):
                 sink_setting.get("format", "default"), None
             )
             sink_setting["filter"] = partial(
-                filter_by_logger_name, logger_name=logger_name, propagate=propagate
+                filter_by_logger_name,
+                logger_name=logger_name,
+                propagate=propagate,
             )
             sink_setting["level"] = logger_setting.get(
                 "level", sink_setting.get("level", "DEBUG")
             )
-            add_loguru_logger(identity=f"{logger_name}:{sink_name}", **sink_setting)
+            add_loguru_logger(
+                identity=f"{logger_name}:{sink_name}", **sink_setting
+            )

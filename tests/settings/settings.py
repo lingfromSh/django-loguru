@@ -20,7 +20,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-9k9h%5x20sp8*weos+j3^d@uq-zb15!y#)v5q!z03w1je=@4qw"
+SECRET_KEY = (
+    "django-insecure-9k9h%5x20sp8*weos+j3^d@uq-zb15!y#)v5q!z03w1je=@4qw"
+)
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -132,9 +134,13 @@ LOGGING_CONFIG = None
 LOGGING = {
     "formats": {
         "default": "<green>ts={time:YYYY-MM-DD HH:mm:ss.SSS}</green> |"
-        " <level>level={level:<8}</level> |"
-        " <cyan>file={file}</cyan> <cyan>module={module}</cyan> <cyan>func={function}</cyan> <cyan>line={line}</cyan>"
+        " <level>level={level.icon} {level}</level> |"
+        " <cyan>file={file}</cyan> <cyan>module={module}</cyan>"
+        " <cyan>func={function}</cyan> <cyan>line={line}</cyan>"
         " - <level>{message}</level>",
+    },
+    "levels": {
+        "CUSTOM": {"no": 50, "icon": "[C]", "color": "<red><underline>"}
     },
     "sinks": {
         "console": {

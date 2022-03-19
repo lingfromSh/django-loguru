@@ -26,6 +26,10 @@ class DjLoguruTest(TestCase):
         except ValueError:
             logger.exception("Exception hanppened.")
 
+    def test_custom(self):
+        logger.log("CUSTOM", "Test custom")
+        logger.custom("Test custom")
+
     def test_propagate(self):
         logger = getLogger("dj_loguru.sub_logger")
         logger.debug("Test propagate.")
