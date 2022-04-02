@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="dj_loguru",
-    version="0.2.1",
+    version="0.2.2",
     description="Use loguru in Django.",
     author="Stephen Ling",
     author_email="lingfromsh@163.com",

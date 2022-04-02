@@ -2,6 +2,9 @@ import logging
 from loguru import logger as loguru_logger
 
 
+def safe_record_message(message):
+    return message.replace("<", "\<").replace(">", "\>")
+
 class DjangoLoguruHandler(logging.Handler):
     def __init__(self, level=0, **kwargs):
         self.kwargs = kwargs
@@ -21,4 +24,4 @@ class DjangoLoguruHandler(logging.Handler):
 
         loguru_logger.bind(logger_name=record.name).opt(
             exception=record.exc_info, depth=depth, colors=True, lazy=True
-        ).log(level, record.getMessage())
+        ).log(level, safe_record_message(record.getMessage()))
